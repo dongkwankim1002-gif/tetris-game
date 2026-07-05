@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAILY CHECKLIST - Neon Tetris</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="checklist.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="checklist-body">
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+        <div class="globe globe-3"></div>
+    </div>
+
+    <div class="app-container checklist-container">
+        <header class="game-header">
+            <h1 class="logo">DAILY<span class="highlight">TASKS</span></h1>
+            <div class="header-controls">
+                <span id="today-label" class="today-label"></span>
+                <button id="theme-btn" class="icon-btn" title="Toggle Theme">🎨</button>
+                <a href="index.html" class="icon-btn" title="Back to Tetris">🎮</a>
+            </div>
+        </header>
+
+        <main class="checklist-layout">
+            <!-- Daily Checklist: resets every day -->
+            <section class="panel glass-panel checklist-panel">
+                <div class="checklist-panel-header">
+                    <h3 class="panel-title">DAILY CHECKLIST</h3>
+                    <span id="daily-progress-label" class="progress-label">0 / 0</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div id="daily-progress-bar" class="progress-bar-fill"></div>
+                </div>
+
+                <form id="daily-form" class="add-item-form">
+                    <input id="daily-input" type="text" placeholder="Add a daily habit..." maxlength="80" autocomplete="off">
+                    <button type="submit" class="add-btn">+</button>
+                </form>
+
+                <ul id="daily-list" class="item-list"></ul>
+                <p id="daily-empty" class="empty-hint">No daily habits yet. Add one above.</p>
+            </section>
+
+            <!-- Todo List: persistent one-off tasks -->
+            <section class="panel glass-panel checklist-panel">
+                <div class="checklist-panel-header">
+                    <h3 class="panel-title">TODO LIST</h3>
+                    <span id="todo-progress-label" class="progress-label">0 left</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div id="todo-progress-bar" class="progress-bar-fill magenta"></div>
+                </div>
+
+                <form id="todo-form" class="add-item-form">
+                    <input id="todo-input" type="text" placeholder="Add a task..." maxlength="80" autocomplete="off">
+                    <button type="submit" class="add-btn">+</button>
+                </form>
+
+                <ul id="todo-list" class="item-list"></ul>
+                <p id="todo-empty" class="empty-hint">No tasks yet. Add one above.</p>
+
+                <button id="clear-completed-btn" class="clear-btn">Clear Completed</button>
+            </section>
+        </main>
+    </div>
+
+    <script src="checklist.js"></script>
+</body>
+</html>
