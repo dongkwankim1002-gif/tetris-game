@@ -1,6 +1,12 @@
 // Personal Daily Checklist + Todo List
 // Data is persisted in localStorage on this device only.
 
+// Fill in your own OAuth 2.0 Client ID from Google Cloud Console
+// (APIs & Services > Credentials > Create Credentials > OAuth client ID > Web application).
+// Add this page's origin (e.g. https://<user>.github.io) as an Authorized JavaScript origin.
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
+
 const STORAGE_KEYS = {
     dailyItems: 'checklist_daily_items',
     dailyProgress: 'checklist_daily_progress',
@@ -182,6 +188,92 @@ function clearCompletedTodos() {
     renderTodo();
 }
 
+// ---------- Google Calendar Sync ----------
+let googleTokenClient = null;
+let googleAccessToken = null;
+
+function initGoogleCalendarClient() {
+    if (!window.google || !google.accounts || !google.accounts.oauth2) {
+        setTimeout(initGoogleCalendarClient, 300);
+        return;
+    }
+    googleTokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: GOOGLE_CALENDAR_SCOPE,
+        callback: (response) => {
+            if (response.error) {
+                alert('구글 캘린더 연결에 실패했습니다: ' + response.error);
+                return;
+            }
+            googleAccessToken = response.access_token;
+            document.getElementById('calendar-connect-btn').textContent = '✅ 캘린더 연결됨';
+            document.getElementById('calendar-import-btn').hidden = false;
+        }
+    });
+}
+
+function connectGoogleCalendar() {
+    if (GOOGLE_CLIENT_ID.startsWith('YOUR_GOOGLE_CLIENT_ID')) {
+        alert('checklist.js의 GOOGLE_CLIENT_ID를 실제 Google OAuth 클라이언트 ID로 교체해야 합니다.');
+        return;
+    }
+    if (!googleTokenClient) {
+        alert('구글 로그인 준비 중입니다. 잠시 후 다시 시도해주세요.');
+        return;
+    }
+    googleTokenClient.requestAccessToken();
+}
+
+async function importTodayEventsFromCalendar() {
+    if (!googleAccessToken) return;
+
+    const timeMin = new Date();
+    timeMin.setHours(0, 0, 0, 0);
+    const timeMax = new Date();
+    timeMax.setHours(23, 59, 59, 999);
+
+    const params = new URLSearchParams({
+        timeMin: timeMin.toISOString(),
+        timeMax: timeMax.toISOString(),
+        singleEvents: 'true',
+        orderBy: 'startTime'
+    });
+
+    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?${params}`, {
+        headers: { Authorization: `Bearer ${googleAccessToken}` }
+    });
+
+    if (!res.ok) {
+        alert('일정을 가져오지 못했습니다. 다시 로그인해 주세요.');
+        return;
+    }
+
+    const data = await res.json();
+    let importedCount = 0;
+
+    (data.items || []).forEach(event => {
+        const alreadyImported = todoItems.some(i => i.calendarEventId === event.id);
+        if (alreadyImported) return;
+
+        const start = event.start && (event.start.dateTime || event.start.date);
+        const time = event.start && event.start.dateTime
+            ? new Date(event.start.dateTime).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+            : '종일';
+
+        todoItems.push({
+            id: uid(),
+            text: `[${time}] ${event.summary || '(제목 없음)'}`,
+            done: false,
+            calendarEventId: event.id
+        });
+        importedCount += 1;
+    });
+
+    saveTodoItems();
+    renderTodo();
+    alert(importedCount > 0 ? `오늘 일정 ${importedCount}건을 추가했습니다.` : '새로 추가할 일정이 없습니다.');
+}
+
 // ---------- Wiring ----------
 document.addEventListener('DOMContentLoaded', () => {
     const dailyForm = document.getElementById('daily-form');
@@ -207,6 +299,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('clear-completed-btn').addEventListener('click', clearCompletedTodos);
+    document.getElementById('calendar-connect-btn').addEventListener('click', connectGoogleCalendar);
+    document.getElementById('calendar-import-btn').addEventListener('click', importTodayEventsFromCalendar);
+    initGoogleCalendarClient();
 
     const todayLabel = document.getElementById('today-label');
     todayLabel.textContent = new Date().toLocaleDateString(undefined, {
