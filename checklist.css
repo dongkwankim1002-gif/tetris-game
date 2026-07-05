@@ -1,0 +1,204 @@
+/* Daily Checklist / Todo List page styles */
+
+.checklist-body {
+    align-items: flex-start;
+}
+
+.checklist-container {
+    max-width: 900px;
+}
+
+.today-label {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    align-self: center;
+    letter-spacing: 1px;
+}
+
+.checklist-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.5rem;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.checklist-panel {
+    flex: 1 1 380px;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+}
+
+.checklist-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.checklist-panel-header .panel-title {
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.progress-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.progress-bar-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 0.8rem 0 1.2rem;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-yellow));
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar-fill.magenta {
+    background: linear-gradient(90deg, var(--accent-magenta), var(--accent-yellow));
+}
+
+.add-item-form {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.add-item-form input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+
+.add-item-form input:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.add-btn {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+    border: none;
+    color: #000;
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 900;
+    width: 42px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.add-btn:hover {
+    transform: scale(1.08);
+}
+
+.item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent-cyan);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checklist-item .item-text {
+    flex: 1;
+    font-size: 1rem;
+    word-break: break-word;
+}
+
+.checklist-item.done .item-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+}
+
+.delete-btn:hover {
+    color: var(--accent-magenta);
+}
+
+.empty-hint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.clear-btn {
+    margin-top: 1rem;
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+    border-color: var(--accent-magenta);
+    color: var(--accent-magenta);
+}
+
+@media (max-width: 850px) {
+    .checklist-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .checklist-panel {
+        max-width: 100%;
+        width: 100%;
+    }
+}
