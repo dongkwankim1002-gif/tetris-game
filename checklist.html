@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="checklist-body">
     <div class="background-globes">
@@ -65,7 +66,11 @@
                 <ul id="todo-list" class="item-list"></ul>
                 <p id="todo-empty" class="empty-hint">No tasks yet. Add one above.</p>
 
-                <button id="clear-completed-btn" class="clear-btn">Clear Completed</button>
+                <div class="calendar-sync">
+                    <button id="calendar-connect-btn" class="clear-btn">📅 구글 캘린더 연결</button>
+                    <button id="calendar-import-btn" class="clear-btn" hidden>오늘 일정 가져오기</button>
+                    <button id="clear-completed-btn" class="clear-btn">Clear Completed</button>
+                </div>
             </section>
         </main>
     </div>

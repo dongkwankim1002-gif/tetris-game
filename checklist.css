@@ -172,8 +172,14 @@
     padding: 1rem 0;
 }
 
-.clear-btn {
+.calendar-sync {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
     margin-top: 1rem;
+}
+
+.clear-btn {
     align-self: flex-start;
     background: transparent;
     border: 1px solid var(--panel-border);
