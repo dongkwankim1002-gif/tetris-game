@@ -4,7 +4,7 @@
 // Fill in your own OAuth 2.0 Client ID from Google Cloud Console
 // (APIs & Services > Credentials > Create Credentials > OAuth client ID > Web application).
 // Add this page's origin (e.g. https://<user>.github.io) as an Authorized JavaScript origin.
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '206523921934-fuvt1u175pmq5jo16oej4rdv38396840.apps.googleusercontent.com';
 const GOOGLE_CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
 
 const STORAGE_KEYS = {
