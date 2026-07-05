@@ -108,7 +108,13 @@ function toggleDaily(id) {
 }
 
 // ---------- Todo List ----------
-let todoItems = loadJSON(STORAGE_KEYS.todoItems, []);
+const DEFAULT_TODOS = [
+    { id: 'seed-salon', text: '미용실 다녀왔나', done: false },
+    { id: 'seed-dentist', text: '치과 방문하였나', done: false },
+    { id: 'seed-insurance', text: '보험 해약할 거 해약했나', done: false }
+];
+
+let todoItems = loadJSON(STORAGE_KEYS.todoItems, DEFAULT_TODOS);
 
 function saveTodoItems() {
     saveJSON(STORAGE_KEYS.todoItems, todoItems);
