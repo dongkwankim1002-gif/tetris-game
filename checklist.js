@@ -237,7 +237,10 @@ async function fetchCalendarIds() {
 }
 
 async function importTodayEventsFromCalendar() {
-    if (!googleAccessToken) return;
+    if (!googleAccessToken) {
+        alert('먼저 "구글 캘린더 연결" 버튼으로 로그인해 주세요. (로그인 후 1시간이 지나면 다시 연결해야 합니다)');
+        return;
+    }
 
     const timeMin = new Date();
     timeMin.setHours(0, 0, 0, 0);
@@ -254,21 +257,21 @@ async function importTodayEventsFromCalendar() {
     // Fetch from every calendar the account can see (not just "primary"),
     // since shared/secondary calendars each have their own event list.
     const calendarIds = await fetchCalendarIds();
-    const eventLists = await Promise.all(calendarIds.map(async (calendarId) => {
+    const results = await Promise.all(calendarIds.map(async (calendarId) => {
         const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?${params}`, {
             headers: { Authorization: `Bearer ${googleAccessToken}` }
         });
-        if (!res.ok) return [];
+        if (!res.ok) return { ok: false, items: [] };
         const data = await res.json();
-        return data.items || [];
+        return { ok: true, items: data.items || [] };
     }));
 
-    if (eventLists.every(list => list.length === 0) && calendarIds.length === 0) {
-        alert('일정을 가져오지 못했습니다. 다시 로그인해 주세요.');
+    if (!results.some(r => r.ok)) {
+        alert('일정을 가져오지 못했습니다 (로그인이 만료되었을 수 있습니다). "구글 캘린더 연결"을 다시 눌러 재로그인해 주세요.');
         return;
     }
 
-    const allEvents = eventLists.flat().filter(event => event.status !== 'cancelled');
+    const allEvents = results.flatMap(r => r.items).filter(event => event.status !== 'cancelled');
     let importedCount = 0;
 
     allEvents.forEach(event => {
