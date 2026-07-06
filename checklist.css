@@ -112,6 +112,37 @@
     box-shadow: 0 0 10px rgba(8, 145, 178, 0.35);
 }
 
+.mic-btn {
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    width: 42px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mic-btn:hover {
+    border-color: var(--accent-cyan);
+}
+
+.mic-btn.listening {
+    border-color: var(--accent-magenta);
+    color: var(--accent-magenta);
+    animation: mic-pulse 1s ease-in-out infinite;
+}
+
+.mic-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+@keyframes mic-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
 .add-btn {
     background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
     border: none;

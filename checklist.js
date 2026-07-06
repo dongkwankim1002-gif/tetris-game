@@ -296,6 +296,48 @@ async function importTodayEventsFromCalendar() {
     alert(importedCount > 0 ? `오늘 일정 ${importedCount}건을 추가했습니다.` : '새로 추가할 일정이 없습니다.');
 }
 
+// ---------- Voice Input ----------
+function setupSpeechInput(buttonId, inputId) {
+    const button = document.getElementById(buttonId);
+    const input = document.getElementById(inputId);
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        button.disabled = true;
+        button.title = '이 브라우저는 음성 입력을 지원하지 않습니다.';
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'ko-KR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.addEventListener('result', (event) => {
+        input.value = event.results[0][0].transcript;
+        input.focus();
+    });
+
+    recognition.addEventListener('error', (event) => {
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            alert('마이크 권한이 필요합니다. 브라우저 설정에서 마이크 접근을 허용해주세요.');
+        } else if (event.error !== 'aborted' && event.error !== 'no-speech') {
+            alert('음성 인식 중 오류가 발생했습니다: ' + event.error);
+        }
+    });
+
+    recognition.addEventListener('start', () => button.classList.add('listening'));
+    recognition.addEventListener('end', () => button.classList.remove('listening'));
+
+    button.addEventListener('click', () => {
+        try {
+            recognition.start();
+        } catch (e) {
+            // Already listening; ignore duplicate start() calls.
+        }
+    });
+}
+
 // ---------- Wiring ----------
 document.addEventListener('DOMContentLoaded', () => {
     const dailyForm = document.getElementById('daily-form');
@@ -324,6 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('calendar-connect-btn').addEventListener('click', connectGoogleCalendar);
     document.getElementById('calendar-import-btn').addEventListener('click', importTodayEventsFromCalendar);
     initGoogleCalendarClient();
+
+    setupSpeechInput('daily-mic-btn', 'daily-input');
+    setupSpeechInput('todo-mic-btn', 'todo-input');
 
     const todayLabel = document.getElementById('today-label');
     todayLabel.textContent = new Date().toLocaleDateString(undefined, {
