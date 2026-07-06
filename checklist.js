@@ -330,15 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
         weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
     });
 
-    const themes = ['default', 'retro', 'pastel'];
-    let currentThemeIndex = 0;
-    document.getElementById('theme-btn').addEventListener('click', () => {
-        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-        const theme = themes[currentThemeIndex];
-        if (theme === 'default') document.documentElement.removeAttribute('data-theme');
-        else document.documentElement.setAttribute('data-theme', theme);
-    });
-
     renderDaily();
     renderTodo();
 });
